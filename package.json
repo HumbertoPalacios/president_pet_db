@@ -1,0 +1,17 @@
+{
+    "name": "deployment-example",
+    "type": "module",
+    "version": "1.0.0",
+    "description": "Refactor for Deployment",
+    "main": "server.js",
+    "scripts": {
+        "start": "node server.js",
+        "dev": "node --watch server.js"
+    },
+    "license": "ISC",
+    "dependencies": {
+        "dotenv": "^16.4.1",
+        "express": "^4.17.1",
+        "pg": "^8.11.3"
+    }
+}
