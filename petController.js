@@ -1,25 +1,11 @@
-import express from "express"; // Import express
-import pg from "pg"; // Import pg
-import fs from "fs"; // Import fs
+import { Router } from 'express'; // Import Router
 
-const fsPromise = fs.promises; // Assign fs.promises to fsPromise for promise-based file operations
-
-const PORT = 8001; // Assign 8001 to be our port
-
-const app = express(); // Invoke express and store in in the app const
-
-app.use(express.json()); // Invoke middleware to parse incoming JSON requests
-
-const pool = new pg.Pool({ // Create a collection of database connections (new pool instances) and assign it to the pool const 
-    host: 'localhost',
-    port: 6432,
-    user: 'postgres',
-    password: 'postgres',
-    database: 'president_pet_db',
-});
+// CREATE a function thats designed to create and configure a router 
+const petRoutes = (pool) => {
+  const router = Router(); // Create a router object
 
 // GET method that retrieves all pets from db
-app.get("/pets", (req, res) => {
+router.get("/", (req, res) => {
     pool.query(`SELECT * FROM pet`) // Query that selects all pet records from db
     .then((data) => { // If query was successful
         res.json(data.rows) // Respond with all records in JSON format
@@ -31,7 +17,7 @@ app.get("/pets", (req, res) => {
 });
 
 // GET method that retrieves a single pet with a specific Id 
-app.get("/pets/:id", (req, res) => {
+router.get("/:id", (req, res) => {
     const id = parseInt(req.params.id); // Parse string into into and store it in const
     if(isNaN(id)) { // Verify if id is a number 
         res.status(400).send("Invalid Id"); // If not, respons with a message
@@ -55,7 +41,7 @@ app.get("/pets/:id", (req, res) => {
 });
 
 // POST method the adds a pet record into db
-app.post("/pets", (req, res) => {
+router.post("/", (req, res) => {
     const fullName = req.body.fullName; // Store input into fullName const 
     const species = req.body.species; // Store input into species const 
     const presidentId = parseInt(req.body.presidentId); // Parse string into int and store it in presidentId const
@@ -77,7 +63,7 @@ app.post("/pets", (req, res) => {
 });
 
 // PATCH method that updates certain record from a specific ID
-app.patch("/pets/:id", (req, res) => {
+router.patch("/:id", (req, res) => {
     const id = parseInt(req.params.id); // Parse string into an int and store in variable 
     if(isNaN(id)) { // Verify if input is a number
         res.status(400).send("Invalid ID"); // If not, respond with message
@@ -110,7 +96,7 @@ app.patch("/pets/:id", (req, res) => {
 })
 
 // DELETE method that deletes a record with a given Id
-app.delete("/pets/:id", (req, res) => {
+router.delete("/:id", (req, res) => {
     const id = parseInt(req.params.id); // Parse string into an int and store in variable 
     if(isNaN(id)) { // Verify is input is a number
         res.status(400).send("Invalid ID"); // If not, respond with message
@@ -132,7 +118,7 @@ app.delete("/pets/:id", (req, res) => {
     })
 })
 
-// LISTEN method that listens on a given port for request
-app.listen(PORT, () => {
-    console.log(`Listening on Port ${PORT}`);
-});
+return router; // Return configured router
+};
+
+export default petRoutes; // Export petRoutes so it can be utilized externally 

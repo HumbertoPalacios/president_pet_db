@@ -1,26 +1,38 @@
-import express from "express";
-import pg from "pg";
+import express from 'express'; // Import express
+import pg from 'pg'; // Import pg
+import dotenv from 'dotenv'; // Import dotenv
+import presidentRoutes from './presidentController.js'; // Import presidentRoutes
+import petRoutes from './petController.js';  // Import petRoutes
 
+dotenv.config(); // Configure dotenv so we access its environment variables
 
-import dotenv from "dotenv";
-dotenv.config();
+const app = express(); // Invoke express framework and assign it to const app
 
-const app = express();
+app.use(express.json()); // Middleware from express that parses chunks of data into JSON format
 
-const client = new pg.Client({
-  connectionString: process.env.DATABASE_URL,
+app.use(express.static('public')); // Serve static files if needed
+
+// Setting up the PostgreSQL pool using environment variables
+const pool = new pg.Pool({
+  connectionString: process.env.DATABASE_URL, // Set the connection we want to be DATABASE_URL
+  ssl: {
+    rejectUnauthorized: false // Set to true in production for verified certificates
+  }
 });
 
-await client.connect();
+// Connect the pool to the database
+pool.connect()
+  .then(() => console.log('Connected successfully to the database'))
+  .catch(err => console.error('Failed to connect to the database', err));
 
-app.use(express.static("public"));
+// Use the routes from the president and pet controllers
+app.use('/api/presidents', presidentRoutes(pool));
+app.use('/api/pets', petRoutes(pool));
 
-app.get("/api/presidents", (_, res) => {
-  client.query("SELECT * FROM president").then((data) => {
-    res.json(data.rows);
-  });
-});
+// Additional routes can be added here
 
-app.listen(process.env.PORT, () => {
-  console.log(`Server listening on port: ${process.env.PORT}.`);
+// Start the server
+const port = process.env.PORT || 3000; // Default to 3000 if no environment variable
+app.listen(port, () => {
+  console.log(`Server listening on port: ${port}`);
 });

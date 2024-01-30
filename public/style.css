@@ -1,0 +1,20 @@
+#title {
+    color: white;
+    font-family: 'Brush Script MT', cursive;
+    font-size: 50px;
+}
+
+#navbar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 20px;
+    margin: auto;
+    border-radius: 0%;
+    background-color: rgb(5, 5, 54);
+}
+
+.sidenav {
+    height: 120%;
+    background-color: rgb(5, 5, 54);
+}

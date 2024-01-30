@@ -1,25 +1,11 @@
-import express from "express"; // Import express
-import pg from "pg"; // Import pg
-import fs from "fs"; // Import fs
+import {Router} from 'express'; // Import Router 
 
-const fsPromise = fs.promises; // Assign fs.promises to fsPromise for promise-based file operations
-
-const PORT = 8001; // Assign 8001 to be our port
-
-const app = express(); // Invoke express and store in in the app const
-
-app.use(express.json()); // Invoke middleware to parse incoming JSON requests
-
-const pool = new pg.Pool({ // Create a collection of database connections (new pool instances) and assign it to the pool const 
-    host: 'localhost',
-    port: 6432,
-    user: 'postgres',
-    password: 'postgres',
-    database: 'president_pet_db',
-})
+// CREATE a function thats designed to create and configure a router
+const presidentRoutes = (pool) => {
+    const router = Router(); // Create a router object 
 
 // GET method that retrieves all records from the president table 
-app.get("/presidents", (req, res) => {
+router.get("/", (req, res) => {
     pool.query(`SELECT * FROM president`) // Query the selects all the records from the president table
         .then((data) => { // If query was successful
             res.json(data.rows) // Respond with all the records in JSON format
@@ -31,7 +17,7 @@ app.get("/presidents", (req, res) => {
 })
 
 // GET method that retrieves a single record from the president table given a specific ID
-app.get("/presidents/:id", (req, res) => {
+router.get("/:id", (req, res) => {
     const id = parseInt(req.params.id); // Parse string into int and store it in id const
 
     if(isNaN(id)) { // Verify if id is a number 
@@ -54,7 +40,7 @@ app.get("/presidents/:id", (req, res) => {
 })
 
 // POST METHOD that adds a new record in president table 
-app.post("/presidents", (req, res) => {
+router.post("/", (req, res) => {
 
     const chronologicalNumber = parseInt(req.body.chronologicalNumber); // parse string into an int and store it in a const
     const fullName = req.body.fullName; // store fullName input into a a const
@@ -80,7 +66,7 @@ app.post("/presidents", (req, res) => {
 })
 
 // PATCH method that updates certain record from a specific ID
-app.patch("/presidents/:id", (req, res) => {
+router.patch("/:id", (req, res) => {
     const id = parseInt(req.params.id); // Parse string into an int and store in variable 
     if (isNaN(id)) { // Verify if it is a number
         res.status(400).send("Invalid ID"); // If not, send 400 message 
@@ -117,14 +103,14 @@ app.patch("/presidents/:id", (req, res) => {
 })
 
 // DELETE method that deletes record with a specific ID
-app.delete("/presidents/:id", (req, res) => {
+router.delete("/:id", (req, res) => {
     const id = parseInt(req.params.id); // Parse string into int and store in const 
     if (isNaN(id)) { // Verify if it is a number 
         res.status(400).send("Invalid ID"); // If not, send 400 message
         return; // Terminate execution 
     }
 
-    pool.query(`DELETE FROM presidents WHERE id = $1 RETURNING *`, [id]) // Query that deletes a record from the president table with a given id
+    pool.query(`DELETE FROM presidents WHERE presidentId = $1 RETURNING *`, [id]) // Query that deletes a record from the president table with a given id
     .then((data) => { // If query was successful
         if(data.rows.length === 0) { // Verify if record was deleted
             res.status(404).send("No presidents found with that given id.");  // If not, respond with a 404 and message stating that no president had that Id
@@ -137,8 +123,8 @@ app.delete("/presidents/:id", (req, res) => {
     })
 })
 
-// LISTEN method that listens on a given port for request
-app.listen(PORT, () => {
-    console.log(`Listening on Port ${PORT}`);
-});
+return router; // Return configured Router
+};
+ 
+export default presidentRoutes; // Export presidentRoutes so it can be utilized externally 
 
