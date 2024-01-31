@@ -8,7 +8,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <title>President and their Pets</title>
-    <script async src="app.js"></script>
 </head>
 <body>
     <nav class="navbar navbar-inverse" id="navbar">
@@ -18,31 +17,24 @@
       </nav>
       <div class="container-fluid">
         <div class="row">
-          <div class="col-sm-1 sidenav">   
-          </div>
-          <div class="col-sm-10 content">
+          <div class="col-sm-12 content">
             <div>
-              <h1>Take down a journey in history and discover the pets behind the presidents. </h1>
-              <h5> Through out American history, pets have played a major role in comforting many U.S. Presidents. Out of the 44 men that have held teh office, essentially all of them have had pets. From horses to sheep and froms dogs to parrots, these animals have called the White House their home.  </h5>
+              <h2>Explore the Fascinating World of Presidential Pets: A Journey Through History</h2>
+              <h4> Throughout American history, pets have been a significant source of comfort and companionship for many U.S. Presidents. Among the 44 individuals who have held the office, nearly all have been pet owners. From majestic horses and gentle sheep to loyal dogs and talkative parrots, a diverse array of animals have found a home within the walls of the White House. </h4>
             </div>
             <hr>
             <div>
-              <label for="start">Choose Date:</label>
-              <input type="date" id="date" min="1995-06-20" max="2024-01-14">
+              <label for="start">Choose the number of a President:</label>
+              <input type="number" id="presidentNumber">
               <button type="button" class="btn btn-primary" id="searchButton">Search</button>
               <button type="button" class="btn btn-danger" id="clearButton">Clear</button> 
             </div>
             <hr>
-            <div id="nasaResults">
-              <h2>Come and take a ride to the Cosmos...</h2>
+            <div id="presidentResults">
+              <h2>Hail to the Pet Chief</h2>
               <br>
-              <img src="https://time.com/wp-content/uploads/2017/10/229-westerlund-21.jpg?w=2000" alt="universe" id="defaultPic" width="700" height="500">
-              <br>
-              <h2>And see what awaits.</h2>
+              <img src="https://i.natgeofe.com/k/ef90348b-94f1-450e-9bab-5006a387395b/bo-white-house_square.jpg" alt="Presidential Pet" id="defaultPetPic" width="500" height="500">
             </div>
-          </div>
-          <div class="col-sm-1 sidenav">
-            
           </div>
         </div>
       </div>

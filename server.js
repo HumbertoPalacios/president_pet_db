@@ -1,12 +1,16 @@
 import express from 'express'; // Import express
 import pg from 'pg'; // Import pg
+import cors from 'cors'; // Import cors
 import dotenv from 'dotenv'; // Import dotenv
 import presidentRoutes from './presidentController.js'; // Import presidentRoutes
 import petRoutes from './petController.js';  // Import petRoutes
 
+
 dotenv.config(); // Configure dotenv so we access its environment variables
 
 const app = express(); // Invoke express framework and assign it to const app
+
+app.use(cors()); // Middleware that enable CORS for all routes and origins.
 
 app.use(express.json()); // Middleware from express that parses chunks of data into JSON format
 

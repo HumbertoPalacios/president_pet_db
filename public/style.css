@@ -14,7 +14,25 @@
     background-color: rgb(5, 5, 54);
 }
 
-.sidenav {
-    height: 120%;
-    background-color: rgb(5, 5, 54);
-}
+.president-info {
+    background-color: #f4f4f4;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+  }
+  
+  .president-info h2 {
+    margin-top: 0;
+  }
+  
+  .pets-list {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .pets-list li {
+    background-color: #e2e2e2;
+    padding: 5px 10px;
+    margin-bottom: 5px;
+    border-radius: 3px;
+  }

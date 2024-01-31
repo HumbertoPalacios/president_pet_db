@@ -46,9 +46,10 @@ router.post("/", (req, res) => {
     const fullName = req.body.fullName; // store fullName input into a a const
     const startYear = parseInt(req.body.startYear); // parse string into an int and store it in a const
     const endYear = parseInt(req.body.endYear); // parse string into an int and store it in a const
-    const hadPets = Boolean(req.body.hadPets); // change string string into a boolean and store in a const 
-
-    if(!chronologicalNumber || !fullName || !startYear || !endYear || !hadPets) { // Verify if client inputted required data
+    const hadPets = req.body.hadPets; // store hadPets into a const
+     
+    // Verify if client inputted required data in proper format
+    if(isNaN(chronologicalNumber) || !fullName || isNaN(startYear) || isNaN(endYear) || typeof hadPets !== 'boolean') { 
         res.status(400).send("Missing President Information"); // If not, send message 
         return; // Terminate execution 
     }
@@ -123,8 +124,34 @@ router.delete("/:id", (req, res) => {
     })
 })
 
+//GET method that retrieves all pets belonging to a president with a specific ID
+router.get("/:id/pets", (req, res) => {
+    const id = parseInt(req.params.id); // Parse string into integer and store it in a const
+    if (isNaN(id)) { // Verify if given input is a number 
+        res.status(400).send("Invalid ID"); // If not, send message
+        return; // Terminate execution
+    }
+
+    // SQL query to select all pets belonging to the president with the given ID
+    pool.query(`SELECT president.presidentId, president.chronologicalNumber, president.fullName AS presidentName, president.startYear, 
+    president.endYear, president.hadPets, pet.petId, pet.fullName AS petName, 
+    pet.species FROM president LEFT JOIN pet ON president.presidentId = pet.presidentId WHERE president.presidentId = $1`, [id])
+    .then((data) => { // If query was successful
+        if (data.rows.length === 0) { // Verify if such information exists
+            res.status(404).send("No pets found for the given president ID."); // If not, send a 404 and a message 
+        } else {
+            res.json(data.rows); // If it does, respond with records in JSON format
+        }
+    })
+    .catch((err) => { // If query was unsuccessful
+        console.error(err); // Log error 
+        res.sendStatus(500); // And respond with a 500 Internal Server Error
+    });
+});
+
 return router; // Return configured Router
 };
  
 export default presidentRoutes; // Export presidentRoutes so it can be utilized externally 
+
 

@@ -46,7 +46,7 @@ router.post("/", (req, res) => {
     const species = req.body.species; // Store input into species const 
     const presidentId = parseInt(req.body.presidentId); // Parse string into int and store it in presidentId const
 
-    if(!fullName || !species || !presidentId) { // Verify if client inputted required data
+    if(!fullName || !species || isNaN(presidentId)) { // Verify if client inputted required data
         res.status(400).send("Missing pet information."); // If not, send message 
         return; // And terminate execution
     }
